@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title – приложение ASP.NET</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/js")
+    @RenderSection("scripts", required: false)
+    <!-- Font Awesome CSS, JS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js"></script>
+</head>
+<body>
+    <!-- Меню взято из сайта Google Nexus -->
+    <ul id="gn-menu" class="gn-menu-main">
+        <li class="gn-trigger">
+            <a class="gn-icon gn-icon-menu"><span>Menu</span></a>
+            <nav class="gn-menu-wrapper">
+                <div class="gn-scroller">
+                    <ul class="gn-menu">
+                        <li><a href="/" class="gn-icon gn-icon-peace">Синхронная - 1 в 1</a></li>
+                        <li><a href="/home/async" class="gn-icon gn-icon-bio">Асинхронная</a></li>
+                        <li><a href="/services/testService.asmx" class="gn-icon gn-icon-service">Веб сервис</a></li>
+                        <li><a href="/services/testService.asmx?wsdl" class="gn-icon gn-icon-service">Веб сервис WSDL</a></li>
+                    </ul>
+                </div><!-- /gn-scroller -->
+            </nav>
+        </li>
+        <li>
+            <a onclick="openMenu()">
+                <i class="far fa-hand-point-left mr-2"></i>
+                Наведите на меню, или кликните по тексту
+            </a>
+        </li>
+        <li>
+            <a onclick="setBgImage()">
+                <i class="far fa-images mr-2"></i>
+                Изменить фон
+            </a>
+        </li>
+        <li>
+            <a href="mailto:apikaster@gmail.com">
+                <i class="far fa-paper-plane mr-2"></i>
+                Написать автору
+            </a>
+        </li>
+    </ul>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+
+
+
+    <script type="text/javascript">
+        new gnMenu(document.getElementById('gn-menu'));
+
+        const openMenu = function () {
+            const menuNav = $('#gn-menu').find('nav');
+            const hasClass = menuNav.hasClass('gn-open-all');
+            if (!hasClass) {
+                menuNav.addClass('gn-open-all');
+            }
+            else {
+                menuNav.removeClass('gn-open-all');
+            }
+        }
+
+        const setBgImage = function (cnt) {
+            if (cnt) {
+                $('body').css('background-image', 'url(/Images/' + cnt + '.jpg)');
+            } else {
+                bg = parseInt(localStorage.getItem('test_bg'));
+                if (bg < 6) {
+                    bg++;
+                } else {
+                    bg = 1;
+                }
+                localStorage.setItem('test_bg', bg);
+                setBgImage(bg);
+            }
+        }
+
+        $(document).ready(() => {
+            bg = localStorage.getItem('test_bg');
+            if (bg !== null) {
+                setBgImage(bg);
+            } else {
+                localStorage.setItem('test_bg', 1);
+                setBgImage(1);
+            }
+            
+
+            // fix написано на скорую руку, строго не судить
+            const textAreas = $('textarea');
+            for (let i = 0; i < textAreas.length; i++) {
+                const tArea = $(textAreas[i]);
+                if (!tArea.hasClass('form-control')) {
+                    tArea.addClass('form-control');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

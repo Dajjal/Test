@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "Async";
+}
+
+<!-- Kendo -->
+<link href="@Url.Content("~/Content/kendo/2018.2.516/kendo.common.min.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/kendo/2018.2.516/kendo.mobile.all.min.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/kendo/2018.2.516/kendo.metro.min.css")" rel="stylesheet" type="text/css" />
+@*<script src="@Url.Content("~/Scripts/kendo/2018.2.516/jquery.min.js")"></script>*@
+<script src="@Url.Content("~/Scripts/kendo/2018.2.516/angular.min.js")"></script>
+<script src="@Url.Content("~/Scripts/kendo/2018.2.516/jszip.min.js")"></script>
+<script src="@Url.Content("~/Scripts/kendo/2018.2.516/kendo.all.min.js")"></script>
+
+<div ng-app="app" ng-controller="AppController as app" class="card">
+    <div class="card-body">
+        <kendo-grid k-options="mainGridOptions" 
+                    k-selectable="true"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var ngApp = angular.module('app', ['kendo.directives']);
+
+    ngApp.controller('AppController', function ($scope, $http, $sce) {
+        $scope.mainGridOptions = {
+            toolbar: [{ name: 'create', text: 'Оставить отзыв' }],
+            editable: 'popup',
+            columns: [
+                { field: 'ClientName', title: 'Имя клиента', width: '30%' },
+                { field: 'Review', title: 'Отзыв', width: '70%' }
+            ],
+            pageable: true,
+            dataSource: {
+                contentType: 'application/json; charset=utf-8',
+                batch: true,
+                pageSize: 5,
+                transport: {
+                    read: '/api/Review',
+                    create: {
+                        method: 'POST',
+                        url: '/api/Review',
+                        contentType: 'text/html'
+                    },
+                    parameterMap: function (data, type) {
+                        if (type !== 'read' && data.models) {
+                            return kendo.stringify(data.models[0]);
+                        }
+                    }
+                },
+                schema: {
+                    model: {
+                        id: 'ID',
+                        fields: {
+                            ClientName: { editable: true, nullable: false, validation: { required: true } },
+                            Review: { editable: true }
+                        }
+                    }
+                }
+            }
+        };
+    });
+</script>
